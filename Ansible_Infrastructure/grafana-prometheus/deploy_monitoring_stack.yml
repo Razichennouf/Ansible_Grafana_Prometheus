@@ -1,0 +1,21 @@
+- name: update servers 
+  hosts: all
+  become: yes
+  tasks:
+  - name: update
+    apt:
+      name: '*'
+
+- name: install monitoring stack
+  hosts: monitorserver
+  become: yes
+  vars_files:
+    - vault
+  roles:
+    - prometheus
+    - grafana
+- name: install node-exporter
+  hosts: nodeservers
+  become: yes
+  roles:
+  - node-exporter

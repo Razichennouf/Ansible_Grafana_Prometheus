@@ -1,0 +1,11 @@
+[monitorserver]
+db_server   ansible_host=x.X.X.X   ansible_user=ubuntu  ansible_ssh_private_key_file=monitor_stack.pem
+
+[nodeservers]
+server1  ansible_host=172.x.x.x  ansible_user=ubuntu  ansible_ssh_private_key_file=~/.ssh/monitor_stack.pem
+server2  ansible_host=172.x.x.x  ansible_user=ubuntu  ansible_ssh_private_key_file=~/.ssh/monitor_stack.pem
+[jenkins]
+server1 ansible_host=172.x.x.x ansible_user=ubuntu  ansible_ssh_private_key_file=~/.ssh/jenkins.pem
+[proxy]
+server1 ansible_host=172.x.x.x ansible_user=ubuntu  ansible_ssh_private_key_file=~/.ssh/proxy.pem
+

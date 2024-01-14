@@ -1,0 +1,20 @@
+---
+
+#
+# Setup/install tasks.
+#
+
+- include: Debian.yml
+  when: ansible_os_family == 'Debian'
+  tags:
+    - install-java
+
+- include: RedHat.yml
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - install-java
+
+- include: FreeBSD.yml
+  when: ansible_os_family == 'FreeBSD'
+  tags:
+    - install-java

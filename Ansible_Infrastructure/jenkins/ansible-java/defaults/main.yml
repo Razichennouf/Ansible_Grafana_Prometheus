@@ -1,0 +1,6 @@
+---
+
+java_jdk_type: 'openjdk'
+java_package: ''
+java_version: '8'
+java_set_as_default: false

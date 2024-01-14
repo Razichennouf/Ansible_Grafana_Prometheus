@@ -1,0 +1,73 @@
+---
+- name: Security Measurements Playbook
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Update all packages
+      apt:
+        upgrade: dist
+
+    - name: Install security packages
+      apt:
+        name:
+          - fail2ban
+          - ufw
+          - debsecan
+          - rkhunter
+          - lynis
+        state: latest
+
+    - name: Configure firewall
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+      loop:
+        - 22  # SSH
+        - 80  # HTTP
+        - 443 # HTTPS
+
+    - name: Enable firewall
+      ufw:
+        state: enabled
+
+    - name: Set up fail2ban
+      copy:
+        src: templates/fail2ban/jail.local
+        dest: /etc/fail2ban/jail.local
+      notify: restart fail2ban
+
+    - name: Copy SSH hardening configuration
+      copy:
+        src: templates/ssh/sshd_config
+        dest: /etc/ssh/sshd_config
+      notify: restart ssh
+
+    - name: Run rkhunter
+      command: rkhunter --checkall
+      register: rkhunter_output
+      changed_when: false
+
+    - name: Display rkhunter results
+      debug:
+        var: rkhunter_output.stdout_lines
+
+    - name: Run Lynis security audit
+      shell: lynis audit system
+      register: lynis_output
+      changed_when: false
+
+    - name: Display Lynis results
+      debug:
+        var: lynis_output.stdout_lines
+
+  handlers:
+    - name: restart fail2ban
+      service:
+        name: fail2ban
+        state: restarted
+
+    - name: restart ssh
+      service:
+        name: ssh
+        state: restarted

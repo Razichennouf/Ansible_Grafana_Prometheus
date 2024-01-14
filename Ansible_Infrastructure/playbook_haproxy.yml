@@ -1,0 +1,5 @@
+- name: haproxy deployment
+  hosts: proxy
+  become: t
+  roles:
+    - haproxy 
